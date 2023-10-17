@@ -64,17 +64,17 @@ public class PushDownAutomaton {
     /** Does this PDA accept this string?  Might run forever. */
     public boolean accepts(String inputString) {
         // Breadth-first search using a queue of PDA positions
-        List<PdaPosition> positions = new ArrayList<>();
+        List<Position> positions = new ArrayList<>();
         List<String> branchNames = new ArrayList<>();
 
         // Start with the start state of this machine
-        positions.add(new PdaPosition(this, inputString, startState));
+        positions.add(new Position(this, inputString, startState));
         branchNames.add("");
 
         int nextPositionNum = 0;
         while (nextPositionNum < positions.size()) {
             // Get the next position in the queue
-            PdaPosition position = positions.get(nextPositionNum);
+            Position position = positions.get(nextPositionNum);
             String branchName = branchNames.get(nextPositionNum);
             if (branchName.length() > 0) {
                 System.out.print(branchName + ": ");
@@ -89,7 +89,7 @@ public class PushDownAutomaton {
             }
 
             // Get all possible next states (non-deterministic so could be 0 to many)
-            List<PdaPosition> nexts = transitionFunction.nextPositions(position);
+            List<Position> nexts = transitionFunction.nextPositions(position);
             positions.addAll(nexts);
             int numChildren = nexts.size();
             if (numChildren == 0) {

@@ -54,14 +54,14 @@ public class TransitionFunction {
      * allow non-determinism, this might return none (reject) or many (branching
      * execution).
      */
-    public List<PdaPosition> nextPositions(PdaPosition position) {
+    public List<Position> nextPositions(Position position) {
         State fromState = position.getState();
-        List<PdaPosition> nextPositions = new ArrayList<PdaPosition>();
+        List<Position> nextPositions = new ArrayList<Position>();
         if (transitions.containsKey(fromState)) {
             for (Transition transition: transitions.get(fromState)) {
                 if (position.readsNextInput(transition.fromInput) && position.isTopOfStack(transition.fromStack)) {
                     // TODO: something to handle branch names?
-                    PdaPosition nextPosition = position.nextPosition(transition.fromInput, transition.fromStack, transition.toState, transition.toStack);
+                    Position nextPosition = position.nextPosition(transition.fromInput, transition.fromStack, transition.toState, transition.toStack);
                     nextPositions.add(nextPosition);
                 }
             }

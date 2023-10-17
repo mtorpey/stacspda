@@ -8,7 +8,7 @@
    It's immutable, and we create a new object to represent the next position,
    using the nextPosition method.
 */
-public class PdaPosition {
+public class Position {
 
     private PushDownAutomaton pda;
     private String inputString;
@@ -16,11 +16,9 @@ public class PdaPosition {
     private State currentState;
     private String currentStack;  // push and pop at the end
 
-    private PdaPosition previous;
+    private Position previous;
 
-    private String branchName;
-
-    public PdaPosition(PushDownAutomaton pda, String inputString, int inputPosition, State currentState, String currentStack) {
+    public Position(PushDownAutomaton pda, String inputString, int inputPosition, State currentState, String currentStack) {
         this.pda = pda;
         this.inputString = inputString;
         this.inputPosition = inputPosition;
@@ -28,13 +26,13 @@ public class PdaPosition {
         this.currentStack = currentStack;
     }
 
-    public PdaPosition(PushDownAutomaton pda, String inputString, int inputPosition, State currentState, String currentStack, PdaPosition previous) {
+    public Position(PushDownAutomaton pda, String inputString, int inputPosition, State currentState, String currentStack, Position previous) {
         this(pda, inputString, inputPosition, currentState, currentStack);
         this.previous = previous;
     }
 
     /** Starting position. */
-    public PdaPosition(PushDownAutomaton pda, String inputString, State startState) {
+    public Position(PushDownAutomaton pda, String inputString, State startState) {
         this(pda, inputString, 0, startState, "");
     }
 
@@ -54,7 +52,7 @@ public class PdaPosition {
     }
 
     /** The position we can move to if we follow the transition specified by the arguments. */
-    public PdaPosition nextPosition(String fromInput, String fromStack, State toState, String toStack) {
+    public Position nextPosition(String fromInput, String fromStack, State toState, String toStack) {
         // Some validity checks
         assert readsNextInput(fromInput);
         assert isTopOfStack(fromStack);
@@ -64,7 +62,7 @@ public class PdaPosition {
         String nextStack = currentStack.substring(0, currentStack.length() - fromStack.length()) + toStack;
 
         // Create new position after the transition is applied
-        return new PdaPosition(this.pda, this.inputString, nextInputPosition, toState, nextStack, this);
+        return new Position(this.pda, this.inputString, nextInputPosition, toState, nextStack, this);
     }
 
     /** Whether the machine has finished execution and ended in an accept state. */
