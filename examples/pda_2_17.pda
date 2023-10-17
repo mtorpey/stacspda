@@ -1,0 +1,17 @@
+States: q1 q2 q3 q4 q5 q6 q7
+StartState: q1
+AcceptStates: q4 q7
+InputAlphabet: abc
+StackAlphabet: a$
+
+q1 - - > $ q2
+q2 a - > a q2
+q2 - - > - q3
+q3 b a > - q3
+q3 - $ > - q4
+q4 c - > - q4
+q2 - - > - q5
+q5 b - > - q5
+q5 - - > - q6
+q6 c a > - q6
+q6 - $ > - q7
