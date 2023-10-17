@@ -1,3 +1,5 @@
+package pda;
+
 /**
    A state in the set of states belonging to a PDA.
 

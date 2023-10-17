@@ -1,3 +1,5 @@
+package pda;
+
 /**
    Represents a configuration of a PDA at a particular moment in time, one one
    branch of execution when processing a string.
