@@ -2,6 +2,7 @@ package pda;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -78,8 +79,10 @@ public class PushDownAutomaton {
             // Get the next position in the queue
             Position position = positions.get(nextPositionNum);
             String branchName = branchNames.get(nextPositionNum);
-            if (branchName.length() > 0) {
-                System.out.print(branchName + ": ");
+            if (branchName.length() == 0) {
+                // System.out.print("Trunk: ");  // Better with no label
+            } else {
+                System.out.print("Branch " + branchName + ": ");
             }
             System.out.print(position);
 
@@ -101,10 +104,12 @@ public class PushDownAutomaton {
                 System.out.println();
             } else {  // numChildren > 1
                 // extend branch names
+                String[] newBranchNames = new String[numChildren];
                 for (int i = 0; i < numChildren; i++) {
-                    branchNames.add(branchName + Character.toString('A' + i));
+                    newBranchNames[i] = branchName + Character.toString('A' + i);
                 }
-                System.out.println(" - " + numChildren + " possible branches");
+                Collections.addAll(branchNames, newBranchNames);
+                System.out.println(" - splits into " + numChildren + " branches " + Arrays.toString(newBranchNames));
             }
 
             // TODO: check for states already seen? (not required but would be nice)
