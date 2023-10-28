@@ -56,7 +56,7 @@ public class TransitionFunction {
      * allow non-determinism, this might return none (reject) or many (branching
      * execution).
      */
-    public List<Position> nextPositions(Position position) {
+    List<Position> nextPositions(Position position) {
         State fromState = position.getState();
         List<Position> nextPositions = new ArrayList<Position>();
         if (transitions.containsKey(fromState)) {
@@ -72,7 +72,7 @@ public class TransitionFunction {
     }
 
     /** Some validity checks to make sure this function applies to the given PDA. */
-    public void assertValidForPda(PushDownAutomaton pda) {
+    void assertValidForPda(PushDownAutomaton pda) {
         for (State state: transitions.keySet()) {
             assert pda.isState(state);
             for (Transition t: transitions.get(state)) {

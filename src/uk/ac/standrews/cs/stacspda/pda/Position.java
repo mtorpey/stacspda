@@ -10,7 +10,7 @@ package uk.ac.standrews.cs.stacspda.pda;
    It's immutable, and we create a new object to represent the next position,
    using the nextPosition method.
 */
-public class Position {
+class Position {
 
     private PushDownAutomaton pda;
     private String inputString;
@@ -20,7 +20,7 @@ public class Position {
 
     private Position previous;
 
-    public Position(PushDownAutomaton pda, String inputString, int inputPosition, State currentState, String currentStack) {
+    Position(PushDownAutomaton pda, String inputString, int inputPosition, State currentState, String currentStack) {
         this.pda = pda;
         this.inputString = inputString;
         this.inputPosition = inputPosition;
@@ -28,33 +28,33 @@ public class Position {
         this.currentStack = currentStack;
     }
 
-    public Position(PushDownAutomaton pda, String inputString, int inputPosition, State currentState, String currentStack, Position previous) {
+    Position(PushDownAutomaton pda, String inputString, int inputPosition, State currentState, String currentStack, Position previous) {
         this(pda, inputString, inputPosition, currentState, currentStack);
         this.previous = previous;
     }
 
     /** Starting position. */
-    public Position(PushDownAutomaton pda, String inputString, State startState) {
+    Position(PushDownAutomaton pda, String inputString, State startState) {
         this(pda, inputString, 0, startState, "");
     }
 
-    public State getState() {
+    State getState() {
         return currentState;
     }
 
     /** Are the next n characters in the input string equal to s? */
-    public boolean readsNextInput(String s) {
+    boolean readsNextInput(String s) {
         return inputString.startsWith(s, inputPosition);
     }
 
     /** Are the given characters equal to the top n characters on the stack (starting with the top)? */
-    public boolean isTopOfStack(String s) {
+    boolean isTopOfStack(String s) {
         String reversed = new StringBuilder(s).reverse().toString();
         return currentStack.endsWith(reversed);
     }
 
     /** The position we can move to if we follow the transition specified by the arguments. */
-    public Position nextPosition(String fromInput, String fromStack, State toState, String toStack) {
+    Position nextPosition(String fromInput, String fromStack, State toState, String toStack) {
         // Some validity checks
         assert readsNextInput(fromInput);
         assert isTopOfStack(fromStack);
@@ -68,11 +68,11 @@ public class Position {
     }
 
     /** Whether the machine has finished execution and ended in an accept state. */
-    public boolean isAccepting() {
+    boolean isAccepting() {
         return inputPosition == inputString.length() && pda.isAcceptState(currentState);
     }
 
-    public String sequenceTrace() {
+    String sequenceTrace() {
         if (previous != null) {
             return previous.sequenceTrace() + "\n" + toString();
         }
