@@ -16,6 +16,21 @@ public class PushDownAutomaton {
     private State startState;
     private Set<State> acceptStates;
 
+    // Usage options
+    private boolean printAcceptPath;
+    private boolean printAllTransitions;
+    private long stepsToTimeout;
+
+    public class MaxStepsExceededException extends Exception {
+        private long maxSteps;
+        public MaxStepsExceededException(long maxSteps) {
+            this.maxSteps = maxSteps;
+        }
+        public long getMaxSteps() {
+            return maxSteps;
+        }
+    }
+
     public PushDownAutomaton(
                              Set<State> states,
                              Set<Character> inputAlphabet,
@@ -31,6 +46,11 @@ public class PushDownAutomaton {
         this.transitionFunction = transitionFunction;
         this.startState = startState;
         this.acceptStates = acceptStates;
+
+        // Usage defaults
+        printAcceptPath = false;
+        printAllTransitions = false;
+        stepsToTimeout = -1;
 
         // Do some checks
         assert states.contains(startState);
@@ -65,7 +85,7 @@ public class PushDownAutomaton {
     }
 
     /** Does this PDA accept this string?  Might run forever. */
-    public boolean accepts(String inputString) {
+    public boolean accepts(String inputString) throws MaxStepsExceededException {
         // Breadth-first search using a queue of PDA positions
         List<Position> positions = new ArrayList<>();
         List<String> branchNames = new ArrayList<>();
@@ -76,20 +96,25 @@ public class PushDownAutomaton {
 
         int nextPositionNum = 0;
         while (nextPositionNum < positions.size()) {
+            // Check for timeout
+            if (stepsToTimeout != -1 && nextPositionNum >= stepsToTimeout) {
+                throw new MaxStepsExceededException(stepsToTimeout);
+            }
+            
             // Get the next position in the queue
             Position position = positions.get(nextPositionNum);
             String branchName = branchNames.get(nextPositionNum);
-            if (branchName.length() == 0) {
-                // System.out.print("Trunk: ");  // Better with no label
-            } else {
-                System.out.print("Branch " + branchName + ": ");
+            if (branchName.length() > 0) {
+                reportTransition("Branch " + branchName + ": ");
             }
-            System.out.print(position);
+            reportTransition(position.toString());
 
             // Check for acceptance
             if (position.isAccepting()) {
-                //System.out.println(position.sequenceTrace());
-                System.out.println(" - accept!");
+                reportTransition(" - accept!\n");
+                if (printAcceptPath) {
+                    System.out.println(position.sequenceTrace());
+                }
                 return true;
             }
 
@@ -98,10 +123,10 @@ public class PushDownAutomaton {
             positions.addAll(nexts);
             int numChildren = nexts.size();
             if (numChildren == 0) {
-                System.out.println(" - end of branch");
+                reportTransition(" - end of branch\n");
             } else if (numChildren == 1) {
                 branchNames.add(branchName);  // same branch name
-                System.out.println();
+                reportTransition("\n");
             } else {  // numChildren > 1
                 // extend branch names
                 String[] newBranchNames = new String[numChildren];
@@ -109,7 +134,7 @@ public class PushDownAutomaton {
                     newBranchNames[i] = branchName + Character.toString('A' + i);
                 }
                 Collections.addAll(branchNames, newBranchNames);
-                System.out.println(" - splits into " + numChildren + " branches " + Arrays.toString(newBranchNames));
+                reportTransition(" - splits into " + numChildren + " branches " + Arrays.toString(newBranchNames) + "\n");
             }
 
             // TODO: check for states already seen? (not required but would be nice)
@@ -120,6 +145,25 @@ public class PushDownAutomaton {
         // Ran out of positions to explore, and no accepting branch found
         return false;
 
+    }
+
+    public void setPrintAcceptPath(boolean printAcceptPath) {
+        this.printAcceptPath = printAcceptPath;
+    }
+
+    public void setPrintAllTransitions(boolean printAllTransitions) {
+        this.printAllTransitions = printAllTransitions;
+    }
+
+    private void reportTransition(String s) {
+        if (printAllTransitions) {
+            System.out.print(s);
+        }
+    }
+
+    /** Number of steps to run for before timing out. Set to -1 for no limit. */
+    public void setStepsToTimeout(long maxSteps) {
+        this.stepsToTimeout = maxSteps;
     }
 
 }

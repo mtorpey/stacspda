@@ -38,12 +38,14 @@ public class Test {
             System.err.println("File not found: " + filename);
         } catch (PdaReader.InvalidPdaFormatException e) {
             System.err.println("Invalid format: " + e.getDescription());
+        } catch (PushDownAutomaton.MaxStepsExceededException e) {
+            System.err.println("Gave up after " + e.getMaxSteps() + " steps without accepting");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void test_pda2_15() {
+    private static void test_pda2_15() throws PushDownAutomaton.MaxStepsExceededException {
         State q1 = new State("q1");
         State q2 = new State("q2");
         State q3 = new State("q3");
