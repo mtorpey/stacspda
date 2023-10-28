@@ -1,3 +1,5 @@
+package uk.ac.standrews.cs.stacspda;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -9,7 +11,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import pda.PushDownAutomaton;
+import uk.ac.standrews.cs.stacspda.pda.PushDownAutomaton;
 
 public class Main {
 

@@ -1,4 +1,4 @@
-package pda;
+package uk.ac.standrews.cs.stacspda.pda;
 
 /**
    A state in the set of states belonging to a PDA.

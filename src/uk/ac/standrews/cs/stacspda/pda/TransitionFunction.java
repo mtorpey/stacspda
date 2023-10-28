@@ -1,4 +1,4 @@
-package pda;
+package uk.ac.standrews.cs.stacspda.pda;
 
 import java.util.ArrayList;
 import java.util.HashMap;

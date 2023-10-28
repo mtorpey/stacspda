@@ -1,4 +1,6 @@
-import pda.*;
+package uk.ac.standrews.cs.stacspda;
+
+import uk.ac.standrews.cs.stacspda.pda.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

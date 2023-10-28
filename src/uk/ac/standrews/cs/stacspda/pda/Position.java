@@ -1,4 +1,4 @@
-package pda;
+package uk.ac.standrews.cs.stacspda.pda;
 
 /**
    Represents a configuration of a PDA at a particular moment in time, one one
