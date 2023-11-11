@@ -10,7 +10,12 @@ public class State {
     private String name;
 
     public State(String name) {
+        assert isValidName(name);
         this.name = name;
+    }
+
+    public static boolean isValidName(String name) {
+        return name.matches("[_A-Za-z][_\\$0-9A-Za-z]*");
     }
 
     public String toString() {

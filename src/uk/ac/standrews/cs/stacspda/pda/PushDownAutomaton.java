@@ -61,8 +61,6 @@ public class PushDownAutomaton {
         assert isValidAlphabet(inputAlphabet);
         assert isValidAlphabet(stackAlphabet);
         transitionFunction.assertValidForPda(this);
-
-        // TODO: check state names against some regex
     }
 
     public static boolean isValidAlphabet(Set<Character> alphabet) {

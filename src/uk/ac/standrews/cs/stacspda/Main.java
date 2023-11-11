@@ -56,7 +56,7 @@ public class Main {
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + e.getMessage());
         } catch (PdaReader.InvalidPdaFormatException e) {
-            System.err.println("Invalid format: " + e.getDescription());
+            System.err.println("Problem in PDA file: " + e.getDescription());
         } catch (PushDownAutomaton.MaxStepsExceededException e) {
             System.err.println("Gave up after " + e.getMaxSteps() + " steps without accepting");
         } catch (IOException e) {

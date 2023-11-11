@@ -29,6 +29,10 @@ public class PdaReader {
             String inputAlphString = singleTokenFromNextHeaderLine(lineScanner, "InputAlphabet");
             String stackAlphString = singleTokenFromNextHeaderLine(lineScanner, "StackAlphabet");
 
+            // Validate state names
+            checkStateNames(stateNames);
+            checkStartStateName(stateNames, startStateName);
+
             // Process the strings into args for constructor
             Set<State> states = statesFromStrings(stateNames);
             State startState = new State(startStateName);
@@ -70,7 +74,7 @@ public class PdaReader {
 
                     // 5. string to push onto stack
                     String toStack = processString(s.next());
-                    if (!PushDownAutomaton.inAlphabet(fromStack, stackAlphabet)) {
+                    if (!PushDownAutomaton.inAlphabet(toStack, stackAlphabet)) {
                         throw new InvalidPdaFormatException("Pushed string '" + toStack + "' contains characters not in stack alphabet");
                     }
 
@@ -93,10 +97,24 @@ public class PdaReader {
         }  // pass on any exceptions
     }
 
+    private void checkStateNames(List<String> stateNames) throws InvalidPdaFormatException {
+        for (String stateName: stateNames) {
+            if (!State.isValidName(stateName)) {
+                throw new InvalidPdaFormatException("Invalid state name '" + stateName + "'");
+            }
+        }
+    }
+
+    private void checkStartStateName(List<String> stateNames, String startStateName) throws InvalidPdaFormatException {
+        if (!stateNames.contains(startStateName)) {
+            throw new InvalidPdaFormatException("Start state '" + startStateName + "' not in list of states");
+        }
+    }
+
     private void checkAlphabet(Set<Character> alphabet) throws InvalidPdaFormatException {
         for (char c: alphabet) {
             if (!PushDownAutomaton.isValidAlphabetChar(c)) {
-                throw new InvalidPdaFormatException("Invalid alphabet character: '" + c + "'");
+                throw new InvalidPdaFormatException("Invalid alphabet character '" + c + "'");
             }
         }
     }
@@ -156,10 +174,6 @@ public class PdaReader {
 
         // No lines left
         return null;
-    }
-
-    private static void parseTransition(String line, List<String> stateNames, TransitionFunction tf) throws PdaReader.InvalidPdaFormatException {
-
     }
 
     // If string is "-", this is the empty string
