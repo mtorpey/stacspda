@@ -20,7 +20,7 @@ public class PdaReader {
         this.filename = filename;
     }
 
-    public PushDownAutomaton readPda() throws IOException, PdaReader.InvalidPdaFormatException {
+    public PushDownAutomaton readPda() throws IOException, InvalidPdaFormatException {
         try(Scanner lineScanner = new Scanner(new File(filename));) {
             // Get strings from header lines in file
             List<String> stateNames = tokensFromNextHeaderLine(lineScanner, "States");
@@ -35,6 +35,10 @@ public class PdaReader {
             Set<State> acceptStates = statesFromStrings(acceptStateNames);
             Set<Character> inputAlphabet = alphabetFromString(inputAlphString);
             Set<Character> stackAlphabet = alphabetFromString(stackAlphString);
+
+            // Check alphabets
+            checkAlphabet(inputAlphabet);
+            checkAlphabet(stackAlphabet);
 
             // Assemble transition function, checking along the way
             TransitionFunction tf = new TransitionFunction();
@@ -89,7 +93,15 @@ public class PdaReader {
         }  // pass on any exceptions
     }
 
-    private String singleTokenFromNextHeaderLine(Scanner lineScanner, String expectedTitle) throws PdaReader.InvalidPdaFormatException {
+    private void checkAlphabet(Set<Character> alphabet) throws InvalidPdaFormatException {
+        for (char c: alphabet) {
+            if (!PushDownAutomaton.isValidAlphabetChar(c)) {
+                throw new InvalidPdaFormatException("Invalid alphabet character: '" + c + "'");
+            }
+        }
+    }
+
+    private String singleTokenFromNextHeaderLine(Scanner lineScanner, String expectedTitle) throws InvalidPdaFormatException {
         List<String> tokens = tokensFromNextHeaderLine(lineScanner, expectedTitle);
         if (tokens.size() != 1) {
             throw new InvalidPdaFormatException("Expected one token for " + expectedTitle + " but found " + tokens.size());
@@ -97,7 +109,7 @@ public class PdaReader {
         return tokens.get(0);
     }
 
-    private List<String> tokensFromNextHeaderLine(Scanner lineScanner, String expectedTitle) throws PdaReader.InvalidPdaFormatException {
+    private List<String> tokensFromNextHeaderLine(Scanner lineScanner, String expectedTitle) throws InvalidPdaFormatException {
         Scanner s = new Scanner(nextPdaLine(lineScanner));
 
         // Check first symbol

@@ -62,7 +62,6 @@ public class TransitionFunction {
         if (transitions.containsKey(fromState)) {
             for (Transition transition: transitions.get(fromState)) {
                 if (position.readsNextInput(transition.fromInput) && position.isTopOfStack(transition.fromStack)) {
-                    // TODO: something to handle branch names?
                     Position nextPosition = position.nextPosition(transition.fromInput, transition.fromStack, transition.toState, transition.toStack);
                     nextPositions.add(nextPosition);
                 }

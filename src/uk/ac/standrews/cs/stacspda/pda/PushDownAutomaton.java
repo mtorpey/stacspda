@@ -21,6 +21,9 @@ public class PushDownAutomaton {
     private boolean printAllTransitions;
     private long stepsToTimeout;
 
+    // Checking validity
+    private static final String VALID_ALPHABET_SPECIAL_CHARS = "$_.+!*'(),;/?:@=&";
+
     public class MaxStepsExceededException extends Exception {
         private long maxSteps;
         public MaxStepsExceededException(long maxSteps) {
@@ -55,9 +58,20 @@ public class PushDownAutomaton {
         // Do some checks
         assert states.contains(startState);
         assert states.containsAll(acceptStates);
+        assert isValidAlphabet(inputAlphabet);
+        assert isValidAlphabet(stackAlphabet);
         transitionFunction.assertValidForPda(this);
 
-        // TODO: check alphabets don't have spaces etc.
+        // TODO: check state names against some regex
+    }
+
+    public static boolean isValidAlphabet(Set<Character> alphabet) {
+        return alphabet.stream().allMatch(PushDownAutomaton::isValidAlphabetChar);
+    }
+    
+    public static boolean isValidAlphabetChar(char c) {
+        // Letters, numbers and defined special characters are allowed.
+        return Character.isLetterOrDigit(c) || VALID_ALPHABET_SPECIAL_CHARS.indexOf(c) != -1;
     }
 
     public boolean isState(State state) {
