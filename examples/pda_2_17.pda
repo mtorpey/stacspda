@@ -1,13 +1,17 @@
+# This PDA is from Sipser Figure 2.17, and recognises all
+# strings of the form a^i b^j c^k where i = j or i = k.
+
 States: q1 q2 q3 q4 q5 q6 q7
 StartState: q1
 AcceptStates: q4 q7
 InputAlphabet: abc
 StackAlphabet: a$
 
+# Transitions are of the form: from_state input_char from_stack > to_stack to_state
 q1 - - > $ q2
 q2 a - > a q2
 q2 - - > - q3
-q3 b a > - q3
+q3 b a > - q3  # i.e. when in state q3, read b from the input string, pop a from the stack, write nothing to the stack and stay in state q3
 q3 - $ > - q4
 q4 c - > - q4
 q2 - - > - q5
