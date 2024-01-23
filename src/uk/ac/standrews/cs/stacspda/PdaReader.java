@@ -60,12 +60,14 @@ public class PdaReader {
                     if (!PushDownAutomaton.inAlphabet(input, inputAlphabet)) {
                         throw new InvalidPdaFormatException("Input '" + input + "' contains characters not in input alphabet");
                     }
+                    checkSingleChar(input, "Input letter");
 
                     // 3. string to pop from stack
                     String fromStack = processString(s.next());
                     if (!PushDownAutomaton.inAlphabet(fromStack, stackAlphabet)) {
                         throw new InvalidPdaFormatException("Popped string '" + fromStack + "' contains characters not in stack alphabet");
                     }
+                    checkSingleChar(fromStack, "Popped letter");
 
                     // 4. separator for readability
                     if (!s.next().equals(SEPARATOR)) {
@@ -77,6 +79,7 @@ public class PdaReader {
                     if (!PushDownAutomaton.inAlphabet(toStack, stackAlphabet)) {
                         throw new InvalidPdaFormatException("Pushed string '" + toStack + "' contains characters not in stack alphabet");
                     }
+                    checkSingleChar(toStack, "Pushed letter");
 
                     // 6. state to move to
                     State toState = new State(s.next());
@@ -119,6 +122,13 @@ public class PdaReader {
         }
     }
 
+    /* Our PDAs could read, push and pop multiple characters at once, but the Sipser definition allows max one character per transition. */
+    private void checkSingleChar(String input, String description) throws InvalidPdaFormatException {
+        if (input.length() > 1) {
+            throw new InvalidPdaFormatException(description + " must be a single character, not '" + input + "'");
+        }
+    }
+
     private String singleTokenFromNextHeaderLine(Scanner lineScanner, String expectedTitle) throws InvalidPdaFormatException {
         List<String> tokens = tokensFromNextHeaderLine(lineScanner, expectedTitle);
         if (tokens.size() != 1) {
@@ -156,7 +166,7 @@ public class PdaReader {
         // Search for a non-trivial line
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            
+
             // remove comments
             int commentStart = line.indexOf('#');
             if (commentStart != -1) {
