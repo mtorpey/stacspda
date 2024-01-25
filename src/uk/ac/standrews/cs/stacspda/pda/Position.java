@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.stacspda.pda;
 
 /**
-   Represents a configuration of a PDA at a particular moment in time, one one
+   Represents a configuration of a PDA at a particular moment in time, on one
    branch of execution when processing a string.
 
    We could call this the "state" of the PDA, but it actually includes the
