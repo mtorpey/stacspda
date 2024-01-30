@@ -31,11 +31,20 @@ public class Main {
             }
             args = cmd.getArgs();
             String filename = args[0];
-            String input = args[1];
 
             // Read PDA from file
             PdaReader reader = new PdaReader(filename);
             PushDownAutomaton pda = reader.readPda();
+
+            // Making a diagram
+            if (cmd.hasOption("diagram")) {
+                String dot = pda.getDotString();
+                System.out.println(dot);
+                return;  // Quit immediately
+            }
+
+            // If not using --help or --diagram, we require an input word
+            String input = args[1];
 
             // Apply user options
             pda.setPrintAllTransitions(cmd.hasOption("show-all"));
@@ -72,6 +81,7 @@ public class Main {
 
     private static Options createCommandLineOptions() {
         Options options = new Options();
+        options.addOption(longOption("diagram", "render a diagram in DOT format and quit", null));
         options.addOption("h", "help", false, "show this help message and quit");
         options.addOption(longOption("show-accept-path", "print all transitions on the accepting path", null));
         options.addOption(longOption("show-all", "print all transitions on all branches", null));

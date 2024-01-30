@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.stacspda.pda;
 
+import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +82,40 @@ public class TransitionFunction {
                 assert pda.inStackAlphabet(t.toStack);
             }
         }
+    }
+
+    /** Partial code to generate a diagram for the PDA, using GraphViz's DOT languge.  See PushDownAutomaton.getDotString */
+    String getDotString() {
+        StringBuilder builder = new StringBuilder();
+        for (State fromState: transitions.keySet()) {
+            Map<State, String> arrowLabels = new HashMap<>();  // arrows from this state
+            for (Transition t: transitions.get(fromState)) {
+                // Get info for this transition
+                String fromInput = makePrintable(t.fromInput);
+                String fromStack = makePrintable(t.fromStack);
+                String toStack = makePrintable(t.toStack);
+
+                // Prepare a label for this transition
+                String label;
+                if ((label = arrowLabels.get(t.toState)) == null) {
+                    label = "";  // New arrow
+                } else {
+                    label += "<BR/>";  // New label on existing arrow
+                }
+                label += "%s,%s&rarr;%s".formatted(fromInput, fromStack, toStack);
+                arrowLabels.put(t.toState, label);
+            }
+            // Write out the arrows from this state
+            for (State toState: arrowLabels.keySet()) {
+                String label = arrowLabels.get(toState);
+                builder.append("  %s -> %s [label=<%s>]\n".formatted(fromState, toState, label));
+            }
+        }
+        return builder.toString();
+    }
+
+    private String makePrintable(String letter) {
+        return letter.length() == 0 ? "<I>&epsilon;</I>" : letter;
     }
     
 }

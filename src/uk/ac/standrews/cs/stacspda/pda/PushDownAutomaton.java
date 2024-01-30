@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.stacspda.pda;
 
+import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -176,6 +177,27 @@ public class PushDownAutomaton {
     /** Number of steps to run for before timing out. Set to -1 for no limit. */
     public void setStepsToTimeout(long maxSteps) {
         this.stepsToTimeout = maxSteps;
+    }
+
+    /** Code to generate a diagram for the PDA, using GraphViz's DOT languge. */
+    public String getDotString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("//dot\n");
+        builder.append("digraph {\n");
+        builder.append("  node [fontname=\"Latin Modern Math\"]\n");
+        builder.append("  edge [fontname=\"Latin Modern Math\"]\n");
+        builder.append("  startArrowBlank [label=\"\", shape=none, height=0, width=0]\n");
+        for (State state: states) {  // Note: states will appear in random order
+            builder.append("  " + state);
+            if (acceptStates.contains(state)) {
+                builder.append(" [peripheries=2]");
+            }
+            builder.append("\n");
+        }
+        builder.append("  startArrowBlank -> " + startState + "\n");
+        builder.append(transitionFunction.getDotString());
+        builder.append("}\n");
+        return builder.toString();
     }
 
 }
