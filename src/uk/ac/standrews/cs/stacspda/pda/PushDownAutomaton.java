@@ -73,6 +73,14 @@ public class PushDownAutomaton {
         return Character.isLetterOrDigit(c) || VALID_ALPHABET_SPECIAL_CHARS.indexOf(c) != -1;
     }
 
+    public static String htmlSafeAlphabetChar(char c) {
+        assert isValidAlphabetChar(c);
+        if (c == '&') {
+            return "&amp;";
+        }
+        return String.valueOf(c);
+    }
+
     public boolean isState(State state) {
         return states.contains(state);
     }
@@ -188,7 +196,7 @@ public class PushDownAutomaton {
         builder.append("  edge [fontname=\"Latin Modern Math\"]\n");
         builder.append("  startArrowBlank [label=\"\", shape=none, height=0, width=0]\n");
         for (State state: states) {  // Note: states will appear in random order
-            builder.append("  " + state);
+            builder.append("  " + state.getDotString());
             if (acceptStates.contains(state)) {
                 builder.append(" [peripheries=2]");
             }

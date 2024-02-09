@@ -108,14 +108,14 @@ public class TransitionFunction {
             // Write out the arrows from this state
             for (State toState: arrowLabels.keySet()) {
                 String label = arrowLabels.get(toState);
-                builder.append("  %s -> %s [label=<%s>]\n".formatted(fromState, toState, label));
+                builder.append("  %s -> %s [label=<%s>]\n".formatted(fromState.getDotString(), toState.getDotString(), label));
             }
         }
         return builder.toString();
     }
 
     private String makePrintable(String letter) {
-        return letter.length() == 0 ? "<I>&epsilon;</I>" : letter;
+        return letter.length() == 0 ? "<I>&epsilon;</I>" : PushDownAutomaton.htmlSafeAlphabetChar(letter.charAt(0));
     }
     
 }

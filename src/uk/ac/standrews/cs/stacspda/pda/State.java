@@ -38,4 +38,8 @@ public class State {
         return this.toString().equals(((State) obj).toString());
     }
 
+    public String getDotString() {
+        // Quote if contains dollar
+        return name.contains("$") ? "\"" + name + "\"" : name;
+    }
 }
