@@ -202,7 +202,7 @@ public class PushDownAutomaton {
             }
             builder.append("\n");
         }
-        builder.append("  startArrowBlank -> " + startState + "\n");
+        builder.append("  startArrowBlank -> " + startState.getDotString() + "\n");
         builder.append(transitionFunction.getDotString());
         builder.append("}\n");
         return builder.toString();
